@@ -1,6 +1,6 @@
 import { createContext, use, useEffect, useState, type PropsWithChildren } from 'react';
 
-import { loginRequest, type User } from '@/services/api';
+import { loginRequest, setAuthToken, setUnauthorizedHandler, type User } from '@/services/api';
 import { deleteItem, getItem, setItem } from '@/services/storage';
 
 const TOKEN_KEY = 'auth.token';
@@ -36,6 +36,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (storedToken && storedUser) {
           setUser(JSON.parse(storedUser));
           setToken(storedToken);
+          setAuthToken(storedToken);
         }
       } catch {
         // An unreadable session is the same as being logged out.
@@ -47,17 +48,26 @@ export function AuthProvider({ children }: PropsWithChildren) {
     restoreSession();
   }, []);
 
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      logout();
+    });
+    return () => setUnauthorizedHandler(null);
+  });
+
   async function login(username: string, password: string) {
     const session = await loginRequest(username, password);
     await Promise.all([
       setItem(TOKEN_KEY, session.token),
       setItem(USER_KEY, JSON.stringify(session.user)),
     ]);
+    setAuthToken(session.token);
     setToken(session.token);
     setUser(session.user);
   }
 
   async function logout() {
+    setAuthToken(null);
     try {
       await Promise.all([deleteItem(TOKEN_KEY), deleteItem(USER_KEY)]);
     } finally {

@@ -9,6 +9,8 @@ export type Post = {
   createdAt: string;
 };
 
+export type PostInput = Pick<Post, 'title' | 'author' | 'description' | 'content'>;
+
 export async function getPosts(query: string, signal?: AbortSignal) {
   const { data } = await api.get<Post[]>('/posts', {
     params: query ? { q: query } : undefined,
@@ -19,5 +21,15 @@ export async function getPosts(query: string, signal?: AbortSignal) {
 
 export async function getPost(id: string, signal?: AbortSignal) {
   const { data } = await api.get<Post>(`/posts/${id}`, { signal });
+  return data;
+}
+
+export async function createPost(input: PostInput) {
+  const { data } = await api.post<Post>('/posts', input);
+  return data;
+}
+
+export async function updatePost(id: string, input: PostInput) {
+  const { data } = await api.put<Post>(`/posts/${id}`, input);
   return data;
 }

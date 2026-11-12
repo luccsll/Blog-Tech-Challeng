@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -17,7 +17,7 @@ import { useAuth } from '@/contexts/auth-context';
 import { useTheme } from '@/hooks/use-theme';
 
 function getErrorMessage(error: unknown) {
-  if (axios.isAxiosError(error)) {
+  if (isAxiosError(error)) {
     if (error.response?.status === 401) {
       return 'Usuário ou senha inválidos.';
     }

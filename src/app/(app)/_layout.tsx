@@ -1,5 +1,10 @@
-import AppTabs from '@/components/app-tabs';
+import { Stack } from 'expo-router';
 
+// Everything in this group sits behind the login guard in the root layout.
 export default function AppLayout() {
-  return <AppTabs />;
+  return (
+    <Stack screenOptions={{ headerBackTitle: 'Voltar' }}>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
+  );
 }

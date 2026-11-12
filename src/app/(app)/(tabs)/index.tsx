@@ -86,9 +86,16 @@ export default function PostsScreen() {
       <View style={[styles.content, contentPlatformStyle]}>
         <View style={styles.header}>
           <ThemedText type="subtitle">Posts</ThemedText>
-          <Pressable accessibilityRole="button" onPress={logout}>
-            <ThemedText type="linkPrimary">Sair</ThemedText>
-          </Pressable>
+          <View style={styles.headerActions}>
+            <Link href="/admin" asChild>
+              <Pressable accessibilityRole="button">
+                <ThemedText type="linkPrimary">Gerenciar</ThemedText>
+              </Pressable>
+            </Link>
+            <Pressable accessibilityRole="button" onPress={logout}>
+              <ThemedText type="linkPrimary">Sair</ThemedText>
+            </Pressable>
+          </View>
         </View>
 
         <TextInput
@@ -177,6 +184,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: Spacing.three,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: Spacing.three,
   },
   search: {
     fontSize: 16,

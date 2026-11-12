@@ -33,3 +33,7 @@ export async function updatePost(id: string, input: PostInput) {
   const { data } = await api.put<Post>(`/posts/${id}`, input);
   return data;
 }
+
+export async function deletePost(id: string) {
+  await api.delete(`/posts/${id}`);
+}

@@ -16,3 +16,8 @@ export async function getPosts(query: string, signal?: AbortSignal) {
   });
   return data;
 }
+
+export async function getPost(id: string, signal?: AbortSignal) {
+  const { data } = await api.get<Post>(`/posts/${id}`, { signal });
+  return data;
+}

@@ -1,5 +1,5 @@
 import { isCancel } from 'axios';
-import { useFocusEffect } from 'expo-router';
+import { Link, useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -141,15 +141,22 @@ function PostCard({ post }: { post: Post }) {
   const theme = useTheme();
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
-      <ThemedText type="smallBold" style={styles.cardTitle}>
-        {post.title}
-      </ThemedText>
-      <ThemedText type="small" themeColor="textSecondary">
-        {post.author}
-      </ThemedText>
-      <ThemedText type="small">{post.description}</ThemedText>
-    </View>
+    <Link href={{ pathname: '/posts/[id]', params: { id: post.id } }} asChild>
+      <Pressable
+        style={({ pressed }) => [
+          styles.card,
+          { backgroundColor: theme.backgroundElement },
+          pressed && styles.pressed,
+        ]}>
+        <ThemedText type="smallBold" style={styles.cardTitle}>
+          {post.title}
+        </ThemedText>
+        <ThemedText type="small" themeColor="textSecondary">
+          {post.author}
+        </ThemedText>
+        <ThemedText type="small">{post.description}</ThemedText>
+      </Pressable>
+    </Link>
   );
 }
 
@@ -194,5 +201,8 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     lineHeight: 24,
+  },
+  pressed: {
+    opacity: 0.7,
   },
 });

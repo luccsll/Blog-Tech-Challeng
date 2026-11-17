@@ -32,17 +32,25 @@ export function setUnauthorizedHandler(handler: (() => void) | null) {
   handleUnauthorized = handler;
 }
 
-/** Message the API sent with an error response, if any. */
+export const FORBIDDEN_MESSAGE = 'Você não tem permissão para esta ação.';
+
+/** Message to show for a failed request: the API's own message, if it sent one. */
 export function getApiMessage(error: unknown) {
   if (isAxiosError<{ message?: string }>(error)) {
+    // 403 means a logged-in aluno tried a professor-only action.
+    if (error.response?.status === 403) return FORBIDDEN_MESSAGE;
     return error.response?.data?.message;
   }
 }
 
+export type Role = 'professor' | 'aluno';
+
 export type User = {
   id: string;
-  name: string;
+  nome: string;
   username: string;
+  email: string;
+  role: Role;
 };
 
 type LoginResponse = {

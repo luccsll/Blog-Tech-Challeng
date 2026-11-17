@@ -14,7 +14,7 @@ export default function NewPostScreen() {
 
   return (
     <PostForm
-      initialValues={{ title: '', author: user?.name ?? '', description: '', content: '' }}
+      initialValues={{ title: '', author: user?.nome ?? '', description: '', content: '' }}
       submitLabel="Publicar"
       onSubmit={handleSubmit}
     />

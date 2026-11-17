@@ -25,7 +25,7 @@ const SEARCH_DELAY = 250;
 type Status = 'loading' | 'ready' | 'error';
 
 export default function PostsScreen() {
-  const { logout } = useAuth();
+  const { isProfessor, logout } = useAuth();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
@@ -87,11 +87,13 @@ export default function PostsScreen() {
         <View style={styles.header}>
           <ThemedText type="subtitle">Posts</ThemedText>
           <View style={styles.headerActions}>
-            <Link href="/admin" asChild>
-              <Pressable accessibilityRole="button">
-                <ThemedText type="linkPrimary">Gerenciar</ThemedText>
-              </Pressable>
-            </Link>
+            {isProfessor && (
+              <Link href="/admin" asChild>
+                <Pressable accessibilityRole="button">
+                  <ThemedText type="linkPrimary">Gerenciar</ThemedText>
+                </Pressable>
+              </Link>
+            )}
             <Pressable accessibilityRole="button" onPress={logout}>
               <ThemedText type="linkPrimary">Sair</ThemedText>
             </Pressable>

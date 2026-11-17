@@ -10,6 +10,8 @@ type AuthContextValue = {
   token: string | null;
   user: User | null;
   isLoading: boolean;
+  /** Only professors can write posts and manage professores/alunos. */
+  isProfessor: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 };
@@ -33,8 +35,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     async function restoreSession() {
       try {
         const [storedToken, storedUser] = await Promise.all([getItem(TOKEN_KEY), getItem(USER_KEY)]);
-        if (storedToken && storedUser) {
-          setUser(JSON.parse(storedUser));
+        const parsedUser: Partial<User> | null = storedUser ? JSON.parse(storedUser) : null;
+        // Sessions saved before roles existed have no role: make the user log in again.
+        if (storedToken && parsedUser?.role) {
+          setUser(parsedUser as User);
           setToken(storedToken);
           setAuthToken(storedToken);
         }
@@ -76,8 +80,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }
 
+  const isProfessor = user?.role === 'professor';
+
   return (
-    <AuthContext.Provider value={{ token, user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ token, user, isLoading, isProfessor, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

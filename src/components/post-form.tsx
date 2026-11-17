@@ -1,16 +1,8 @@
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View,
-  type TextInputProps,
-} from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedText } from '@/components/themed-text';
+import { FormError, FormField, SubmitButton } from '@/components/form-field';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { getApiMessage } from '@/services/api';
@@ -65,63 +57,27 @@ export function PostForm({ initialValues, submitLabel, onSubmit }: PostFormProps
       automaticallyAdjustKeyboardInsets
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={[styles.container, { paddingBottom: insets.bottom + Spacing.four }]}>
-        <View style={styles.form}>
-          <Field label="Título" value={values.title} onChangeText={setField('title')} />
-          <Field label="Autor" value={values.author} onChangeText={setField('author')} />
-          <Field
-            label="Descrição (opcional)"
-            value={values.description}
-            onChangeText={setField('description')}
-            multiline
-          />
-          <Field
-            label="Conteúdo"
-            value={values.content}
-            onChangeText={setField('content')}
-            multiline
-            style={styles.content}
-          />
+      <View style={styles.form}>
+        <FormField label="Título" value={values.title} onChangeText={setField('title')} />
+        <FormField label="Autor" value={values.author} onChangeText={setField('author')} />
+        <FormField
+          label="Descrição (opcional)"
+          value={values.description}
+          onChangeText={setField('description')}
+          multiline
+        />
+        <FormField
+          label="Conteúdo"
+          value={values.content}
+          onChangeText={setField('content')}
+          multiline
+          style={styles.content}
+        />
 
-          {error && (
-            <ThemedText type="small" style={styles.error} accessibilityRole="alert">
-              {error}
-            </ThemedText>
-          )}
-
-          <Pressable
-            accessibilityRole="button"
-            disabled={isSubmitting}
-            onPress={handleSubmit}
-            style={({ pressed }) => [
-              styles.button,
-              { backgroundColor: theme.text },
-              (pressed || isSubmitting) && styles.pressed,
-            ]}>
-            {isSubmitting ? (
-              <ActivityIndicator color={theme.background} />
-            ) : (
-              <ThemedText style={{ color: theme.background }}>{submitLabel}</ThemedText>
-            )}
-          </Pressable>
-        </View>
+        <FormError message={error} />
+        <SubmitButton label={submitLabel} isSubmitting={isSubmitting} onPress={handleSubmit} />
+      </View>
     </ScrollView>
-  );
-}
-
-function Field({ label, style, ...props }: TextInputProps & { label: string }) {
-  const theme = useTheme();
-
-  return (
-    <View style={styles.field}>
-      <ThemedText type="smallBold">{label}</ThemedText>
-      <TextInput
-        accessibilityLabel={label}
-        placeholderTextColor={theme.textSecondary}
-        textAlignVertical={props.multiline ? 'top' : 'center'}
-        style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text }, style]}
-        {...props}
-      />
-    </View>
   );
 }
 
@@ -136,28 +92,7 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
   },
-  field: {
-    gap: Spacing.one,
-  },
-  input: {
-    fontSize: 16,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.three,
-    borderRadius: Spacing.two,
-  },
   content: {
     minHeight: 200,
-  },
-  error: {
-    color: '#E5484D',
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 48,
-    borderRadius: Spacing.two,
-  },
-  pressed: {
-    opacity: 0.7,
   },
 });

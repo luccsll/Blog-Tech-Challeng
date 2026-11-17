@@ -1,7 +1,7 @@
 import { isCancel } from 'axios';
 import { Link, useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -10,11 +10,12 @@ import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { getApiMessage } from '@/services/api';
 import { deletePost, getPosts, type Post } from '@/services/posts';
+import { showError } from '@/utils/alert';
 import { confirm } from '@/utils/confirm';
 
 type Status = 'loading' | 'ready' | 'error';
 
-export default function AdminScreen() {
+export default function AdminPostsScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const [posts, setPosts] = useState<Post[]>([]);
@@ -62,12 +63,7 @@ export default function AdminScreen() {
       await deletePost(post.id);
       setPosts((current) => current.filter((p) => p.id !== post.id));
     } catch (e) {
-      const message = getApiMessage(e) ?? 'Não foi possível excluir o post. Tente novamente.';
-      if (Platform.OS === 'web') {
-        window.alert(message);
-      } else {
-        Alert.alert('Erro', message);
-      }
+      showError(getApiMessage(e) ?? 'Não foi possível excluir o post. Tente novamente.');
     } finally {
       setDeletingId(null);
     }

@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { useTheme } from '@/hooks/use-theme';
 import { getPosts, type Post } from '@/services/posts';
@@ -132,7 +132,7 @@ export default function PostsScreen() {
             refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={refresh} />}
             contentContainerStyle={[
               styles.list,
-              { paddingBottom: insets.bottom + BottomTabInset + Spacing.three },
+              { paddingBottom: insets.bottom + Spacing.three },
             ]}
             ListEmptyComponent={
               <ThemedText themeColor="textSecondary" style={styles.feedback}>

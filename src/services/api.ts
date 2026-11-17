@@ -1,7 +1,7 @@
-import axios, { isAxiosError } from 'axios';
+import { create, isAxiosError } from 'axios';
 
 // On a physical device, localhost is the device itself: use the computer's LAN IP.
-export const api = axios.create({
+export const api = create({
   baseURL: process.env.EXPO_PUBLIC_API_URL ?? 'http://SEU_IP:3001',
   timeout: 10000,
 });

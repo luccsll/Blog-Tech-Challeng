@@ -8,7 +8,7 @@ export default function AppLayout() {
 
   return (
     <Stack screenOptions={{ headerBackTitle: 'Voltar' }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="posts/[id]/index" options={{ title: 'Post' }} />
 
       {/* Alunos only read posts: opening any of these sends them back to the post list. */}

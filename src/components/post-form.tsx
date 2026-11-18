@@ -53,6 +53,8 @@ export function PostForm({ initialValues, submitLabel, onSubmit }: PostFormProps
 
   return (
     <ScrollView
+      // The iOS header is translucent and sits over the screen: this pushes the content below it.
+      contentInsetAdjustmentBehavior="automatic"
       style={{ backgroundColor: theme.background }}
       automaticallyAdjustKeyboardInsets
       keyboardShouldPersistTaps="handled"

@@ -69,6 +69,8 @@ export default function PostScreen() {
 
   return (
     <ScrollView
+      // The iOS header is translucent and sits over the screen: this pushes the content below it.
+      contentInsetAdjustmentBehavior="automatic"
       style={{ backgroundColor: theme.background }}
       contentContainerStyle={[styles.container, { paddingBottom: insets.bottom + Spacing.four }]}>
       <View style={styles.article}>

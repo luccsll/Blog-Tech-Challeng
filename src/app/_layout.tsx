@@ -27,10 +27,10 @@ function RootNavigator() {
       {/* The overlay hides the native splash, so it waits for the stored session. */}
       {!isLoading && <AnimatedSplashOverlay />}
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={isLoggedIn}>
-          <Stack.Screen name="(app)" />
-        </Stack.Protected>
+        {/* The post list opens first, logged in or not: reading posts needs no login. */}
+        <Stack.Screen name="(app)" />
 
+        {/* Once logged in, the login screen closes and the user is back on the post list. */}
         <Stack.Protected guard={!isLoggedIn}>
           <Stack.Screen name="login" />
         </Stack.Protected>

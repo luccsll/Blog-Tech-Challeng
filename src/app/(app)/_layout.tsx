@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 
 import { useAuth } from '@/contexts/auth-context';
 
-// Everything in this group sits behind the login guard in the root layout.
+// The post list and post reading are public; everything else needs a logged-in professor.
 export default function AppLayout() {
   const { isProfessor } = useAuth();
 
@@ -11,7 +11,7 @@ export default function AppLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="posts/[id]/index" options={{ title: 'Post' }} />
 
-      {/* Alunos only read posts: opening any of these sends them back to the post list. */}
+      {/* Visitors and alunos only read posts: opening any of these sends them back to the post list. */}
       <Stack.Protected guard={isProfessor}>
         <Stack.Screen name="admin/index" options={{ title: 'Gerenciar' }} />
         <Stack.Screen name="admin/posts" options={{ title: 'Posts' }} />

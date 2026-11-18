@@ -22,6 +22,8 @@ export default function AdminScreen() {
 
   return (
     <ScrollView
+      // The iOS header is translucent and sits over the screen: this pushes the content below it.
+      contentInsetAdjustmentBehavior="automatic"
       style={{ backgroundColor: theme.background }}
       contentContainerStyle={[styles.list, { paddingBottom: insets.bottom + Spacing.four }]}>
       {SECTIONS.map((section) => (

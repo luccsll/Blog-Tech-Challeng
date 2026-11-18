@@ -90,6 +90,8 @@ export default function AdminPostsScreen() {
 
   return (
     <FlatList
+      // The iOS header is translucent and sits over the screen: this pushes the content below it.
+      contentInsetAdjustmentBehavior="automatic"
       style={{ backgroundColor: theme.background }}
       data={posts}
       keyExtractor={(post) => post.id}

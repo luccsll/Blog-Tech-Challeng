@@ -118,6 +118,8 @@ export function UserList({ role }: { role: Role }) {
 
   return (
     <FlatList
+      // The iOS header is translucent and sits over the screen: this pushes the content below it.
+      contentInsetAdjustmentBehavior="automatic"
       style={{ backgroundColor: theme.background }}
       data={result.data}
       keyExtractor={(user) => user.id}

@@ -58,6 +58,8 @@ export function UserForm({ initialValues, isEditing, submitLabel, onSubmit }: Us
 
   return (
     <ScrollView
+      // The iOS header is translucent and sits over the screen: this pushes the content below it.
+      contentInsetAdjustmentBehavior="automatic"
       style={{ backgroundColor: theme.background }}
       automaticallyAdjustKeyboardInsets
       keyboardShouldPersistTaps="handled"

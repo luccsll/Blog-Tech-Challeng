@@ -1,4 +1,5 @@
 import { isAxiosError } from 'axios';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -41,6 +42,12 @@ export default function LoginScreen() {
     { backgroundColor: theme.backgroundElement, color: theme.text },
   ];
 
+  // Opened straight from a URL on the web there is no screen behind this one.
+  function goBack() {
+    if (router.canGoBack()) router.back();
+    else router.replace('/');
+  }
+
   async function handleSubmit() {
     if (isSubmitting) return;
 
@@ -52,7 +59,7 @@ export default function LoginScreen() {
     setError(null);
     setIsSubmitting(true);
     try {
-      // On success the guard in the root layout replaces this screen with the home screen.
+      // On success the guard in the root layout closes this screen, back to the post list.
       await login(username.trim(), password);
     } catch (e) {
       setError(getErrorMessage(e));
@@ -67,6 +74,10 @@ export default function LoginScreen() {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.form}>
+          <Pressable accessibilityRole="button" onPress={goBack} style={styles.back}>
+            <ThemedText type="linkPrimary">‹ Voltar para os posts</ThemedText>
+          </Pressable>
+
           <ThemedText type="subtitle">Entrar</ThemedText>
 
           <TextInput
@@ -147,6 +158,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.three,
     borderRadius: Spacing.two,
+  },
+  back: {
+    alignSelf: 'flex-start',
   },
   error: {
     color: '#E5484D',

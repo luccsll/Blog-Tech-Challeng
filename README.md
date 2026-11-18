@@ -20,9 +20,9 @@ O app consome a API REST do blog desenvolvida na fase anterior ([luccsll/Tech-Ch
 
 | Funcionalidade | Aluno | Professor |
 |---|:-:|:-:|
+| Lista de posts com busca por palavra-chave (sem login) | ✅ | ✅ |
+| Leitura do post completo (sem login) | ✅ | ✅ |
 | Login e logout (sessão salva no aparelho) | ✅ | ✅ |
-| Lista de posts com busca por palavra-chave | ✅ | ✅ |
-| Leitura do post completo | ✅ | ✅ |
 | Criar, editar e excluir posts | — | ✅ |
 | Listar (paginado), cadastrar, editar e excluir professores | — | ✅ |
 | Listar (paginado), cadastrar, editar e excluir alunos | — | ✅ |
@@ -127,9 +127,9 @@ flowchart LR
 ```
 src/
 ├── app/                      # Rotas (Expo Router): cada arquivo é uma tela
-│   ├── _layout.tsx           # Tema, AuthProvider e guarda de login
+│   ├── _layout.tsx           # Tema, AuthProvider; login só para deslogados
 │   ├── login.tsx
-│   └── (app)/                # Só para usuários logados
+│   └── (app)/                # Lista e leitura públicas; o resto é de professor
 │       ├── _layout.tsx       # Stack + guarda de professor
 │       ├── index.tsx         # Lista de posts com busca
 │       ├── posts/
@@ -154,8 +154,8 @@ src/
 | Rota | Tela | Acesso |
 |---|---|---|
 | `/login` | Login | Somente deslogado |
-| `/` | Lista de posts com busca | Logado |
-| `/posts/:id` | Leitura do post | Logado |
+| `/` | Lista de posts com busca (tela inicial) | Público |
+| `/posts/:id` | Leitura do post | Público |
 | `/admin` | Hub "Gerenciar" (Posts, Professores, Alunos) | Professor |
 | `/admin/posts` | Lista de posts com Editar/Excluir | Professor |
 | `/posts/new` | Novo post | Professor |
@@ -175,8 +175,9 @@ src/
 As regras são aplicadas nas duas pontas:
 
 - **No app:**
-  - O root layout só libera o grupo `(app)` para quem está logado.
-  - O layout de `(app)` usa `Stack.Protected guard={isProfessor}` em todas as telas de escrita e gestão. Se um aluno tentar abrir uma delas, mesmo digitando a URL na web, é levado de volta para a lista de posts.
+  - O app abre direto na lista de posts, sem exigir login: listar e ler posts é público (como na API). O botão **Entrar** fica no topo da lista; depois do login, a tela de login fecha e o usuário volta para os posts.
+  - A tela `/login` só existe para quem está deslogado.
+  - O layout de `(app)` usa `Stack.Protected guard={isProfessor}` em todas as telas de escrita e gestão. Se um visitante ou aluno tentar abrir uma delas, mesmo digitando a URL na web, é levado de volta para a lista de posts.
   - O botão "Gerenciar" nem aparece para alunos.
 - **Na API:** as rotas de escrita de posts e todas as de `/professores` e `/alunos` exigem professor. Um aluno recebe **403**, que o app mostra como *"Você não tem permissão para esta ação."*
 
@@ -210,14 +211,15 @@ Respostas de erro tratadas pelo app: **400** (campos obrigatórios), **401** (se
 
 ### Aluno
 
-1. Entre com `joao.aluno` / `aluno123`.
-2. A tela inicial lista os posts. Digite na busca para filtrar por título, autor ou palavra-chave; puxe a lista para baixo para atualizar.
+1. Ao abrir o app, a tela inicial já lista os posts, sem login.
+2. Digite na busca para filtrar por título, autor ou palavra-chave; puxe a lista para baixo para atualizar.
 3. Toque num post para ler o conteúdo completo.
-4. Toque em **Sair** para encerrar a sessão.
+4. Para entrar, toque em **Entrar** e use `joao.aluno` / `aluno123`. Depois do login você volta para a lista.
+5. Toque em **Sair** para encerrar a sessão.
 
 ### Professor
 
-1. Entre com `marina.souza` / `professor123`.
+1. Na lista de posts, toque em **Entrar** e use `marina.souza` / `professor123`.
 2. Além da lista e da leitura, aparece o botão **Gerenciar**, que abre três áreas:
    - **Posts**:
      - **Novo post** abre o formulário. Título, autor e conteúdo são obrigatórios; a descrição é opcional.
